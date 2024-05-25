@@ -49,7 +49,6 @@ export default class App extends Component {
     }
 
     async populateRecipeData() {
-        const test = await fetch('/api');
         const response = await fetch('api/recipes');
         const data = await response.json();
         this.setState({ recipes: data, loading: false });
