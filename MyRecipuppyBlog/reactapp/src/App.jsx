@@ -24,9 +24,10 @@ export default class App extends Component {
                 </thead>
                 <tbody>
                     {recipes.map(recipe =>
-                        <tr key={recipe.name}>
+                        <tr key={recipe.id}>
+                            <td>{recipe.name}</td>
                             <td>{recipe.ingredients.join(", ")}</td>
-                            <td>{recipe.singlesteprecipetext}</td>
+                            <td>{recipe.singleStepRecipeText}</td>
                         </tr>
                     )}
                 </tbody>
