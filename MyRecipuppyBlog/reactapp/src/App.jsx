@@ -1,0 +1,57 @@
+import React, { Component } from 'react';
+
+export default class App extends Component {
+    static displayName = App.name;
+
+    constructor(props) {
+        super(props);
+        this.state = { recipes: [], loading: true };
+    }
+
+    componentDidMount() {
+        this.populateRecipeData();
+    }
+
+    static renderRecipesIndex(recipes) {
+        return (
+            <table className='table table-striped' aria-labelledby="tabelLabel">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Ingredients</th>
+                        <th>Recipe Steps</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {recipes.map(recipe =>
+                        <tr key={recipe.name}>
+                            <td>{recipe.ingredients.join(", ")}</td>
+                            <td>{recipe.singlesteprecipetext}</td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+        );
+    }
+
+    render() {
+        let contents = this.state.loading
+            ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
+            : App.renderRecipesIndex(this.state.recipes);
+
+        return (
+            <div>
+                <h1 id="tabelLabel" >Recipes</h1>
+                <p>This component demonstrates fetching data from the server.</p>
+                {contents}
+            </div>
+        );
+    }
+
+    async populateRecipeData() {
+        const test = await fetch('/api');
+        const response = await fetch('api/recipes');
+        const data = await response.json();
+        this.setState({ recipes: data, loading: false });
+    }
+}

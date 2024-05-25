@@ -1,0 +1,12 @@
+# ignore VS workspace changes
+*.wsuo
+*.suo
+*.user
+
+# ignore .vs folder
+.vs
+
+# ignore packages and build artifacts
+packages
+bin
+obj
