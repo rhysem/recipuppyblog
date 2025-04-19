@@ -27,10 +27,21 @@ namespace RecipeAPI.Controllers
 
         // TODO - handle CSRF - in whole app!!!
         [HttpPost]
-        public Task<Recipe> CreateRecipe(int id, Recipe recipe)
+        [Route("")]
+        public async Task<int> CreateRecipe(Recipe recipe)
         {
-            recipe.Id = id;
-            return _recipeRepository.SaveRecipe(recipe);
+            //recipe.Id = id;
+            try
+            {
+                // this works-ish but throws on SaveChangesAsync - why? 
+                // is this even relevant? do I want to switch to DynamoDB now?
+                return await _recipeRepository.SaveRecipeAsync(recipe);
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+                return -1;
+            }
         }
 
         //[HttpPost]

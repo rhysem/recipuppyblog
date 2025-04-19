@@ -5,9 +5,9 @@ namespace RecipeAPI.Repositories
     public interface IRecipeRepository
     {
         public Task<IEnumerable<Recipe>> GetRecipes();
-        public Task<Recipe> GetRecipe(int id);
-        public Task<Recipe> SaveRecipe(Recipe recipe);
-        public Task DeleteRecipe(int id);
+        public Task<Recipe> GetRecipeAsync(int id);
+        public Task<int> SaveRecipeAsync(Recipe recipe);
+        public Task DeleteRecipeAsync(int id);
         //public List<Recipe> GetRecipesByCategory(Category category);
     }
 }
