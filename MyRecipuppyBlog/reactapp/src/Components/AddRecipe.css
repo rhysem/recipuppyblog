@@ -1,0 +1,16 @@
+#new-recipe-form {
+    width: 100%;
+}
+
+.elemRow {
+    display: block;
+}
+
+label {
+    padding-right: 8px;
+}
+
+.submitBtn {
+    border-radius: 5px;
+    background-color: pink;
+}
