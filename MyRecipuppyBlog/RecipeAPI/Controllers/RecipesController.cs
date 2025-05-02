@@ -11,10 +11,11 @@ namespace RecipeAPI.Controllers
     {
         private readonly IRecipeRepository _recipeRepository;
 
-        public RecipesController()
+        public RecipesController(IRecipeRepository recipeRepository)
         {
             // TODO - dependency injection!!!
-            _recipeRepository = new RecipeRepository();
+            // hmmm - LOOKS like this sets up repo/dependencies ok, but AddRecipe.jsx gets a 400 back - never gets to endpoint in CreateRecipe - what's going on?
+            _recipeRepository = recipeRepository;
         }
 
         [HttpGet]
@@ -28,19 +29,16 @@ namespace RecipeAPI.Controllers
         // TODO - handle CSRF - in whole app!!!
         [HttpPost]
         [Route("")]
-        public async Task<int> CreateRecipe(Recipe recipe)
+        public async Task<string> CreateRecipe(Recipe recipe)
         {
-            //recipe.Id = id;
             try
             {
-                // this works-ish but throws on SaveChangesAsync - why? 
-                // is this even relevant? do I want to switch to DynamoDB now?
                 return await _recipeRepository.SaveRecipeAsync(recipe);
             }
             catch (Exception ex)
             {
                 ex.ToString();
-                return -1;
+                return "-1";
             }
         }
 

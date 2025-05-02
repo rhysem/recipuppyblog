@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.Model;
 
 using RecipeAPI.Entities;
 
@@ -6,39 +7,66 @@ namespace RecipeAPI.Repositories
 {
     public class RecipeRepository : IRecipeRepository
     {
-        //private readonly RecipeContext _context;
-        //private readonly DbSet<Recipe> _recipes;
+        private readonly AmazonDynamoDBClient _client;
+        private readonly IConfiguration _config;
+        const string TableName = "Recipes";
 
-        //public RecipeRepository()
-        //{
-        //    _context = new RecipeContext();
-        //}
+        public RecipeRepository(IConfiguration config)
+        {
+            _config = config;
+
+            var accessKey = _config.GetValue<string>("AWS:AccessKey");
+            var secretKey = _config.GetValue<string>("AWS:SecretKey");
+            var region = Amazon.RegionEndpoint.GetBySystemName(_config.GetValue<string>("AWS:Region"));
+            _client = new AmazonDynamoDBClient(accessKey, secretKey, region);
+        }
+
 
         public async Task<IEnumerable<Recipe>> GetRecipes()
         {
-            var recipe = new Recipe { Id = 1, Name = "Tofu zucchini boats! Yum!", Ingredients = "tofu\nzucchini\nyumminess", Directions = "Enjoy!" };
-            return new List<Recipe> { recipe };
+            throw new NotImplementedException();
         }
 
-        public Task<Recipe> GetRecipeAsync(int id)
+        public async Task<Recipe> GetRecipeAsync(string id)
         {
-            using (var db = new RecipeContext())
+            var request = new GetItemRequest
             {
-                return (from r in db.Recipes
-                        where r.Id == id
-                        select r).FirstOrDefaultAsync();
-            }
+                TableName = TableName,
+                Key = new Dictionary<string, AttributeValue>() { { "RecipeID", new AttributeValue { S = id } } }
+            };
+
+            var resp = await _client.GetItemAsync(request);
+            var attributeMap = resp.Item; // map to recipe
+
+            return new Recipe()
+            {
+
+            };
         }
 
-        public Task<int> SaveRecipeAsync(Recipe recipe)
+        public async Task<string> SaveRecipeAsync(Recipe recipe)
         {
             // validate - should this go in like a service?
 
-            using (var db = new RecipeContext())
+            var recipeId = Guid.NewGuid().ToString();
+            var recipeItem = new Dictionary<string, AttributeValue>
             {
-                db.Recipes.Add(recipe);
-                return db.SaveChangesAsync();
-            }
+                ["RecipeID"] = new AttributeValue { S = recipeId },
+                ["Name"] = new AttributeValue { S = recipe.Name },
+                ["Description"] = new AttributeValue { S = recipe.Description },
+                ["Directions"] = new AttributeValue { S = recipe.Directions },
+                ["Ingredients"] = new AttributeValue { S = recipe.Ingredients }
+            };
+
+            var request = new PutItemRequest
+            {
+                TableName = TableName,
+                Item = recipeItem
+            };
+
+            var resp = await _client.PutItemAsync(request);
+            // TO DO: look at HTTPStatusCode or whatever it's called
+            return recipeId;
         }
 
         public Task DeleteRecipeAsync(int id)

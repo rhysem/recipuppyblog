@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './AddRecipe.css';
 
-export default class AddRecipes extends Component {
+export default class AddRecipe extends Component {
     constructor(props) {
         super(props)
     }
@@ -12,12 +12,8 @@ export default class AddRecipes extends Component {
         var ingredients = document.getElementById("ingredients").value;
         var directions = document.getElementById("directions").value;
 
-        console.log(name);
-        console.log(description);
-        console.log(ingredients);
-        console.log(directions);
-
-        var recipe = { name: name, description: description, ingredients, ingredients, directions: directions };
+        // ?????????????????????? this throws a fucking fit if there's no ID param even as an empty string. am i missing something? can i allow missing prop or something?
+        var recipe = { id: '', name: name, description: description, ingredients, ingredients, directions: directions };
 
             const config = {
                 method: 'POST',
@@ -28,8 +24,7 @@ export default class AddRecipes extends Component {
                 body: JSON.stringify(recipe)
             }
 
-            //const response = await fetch('api/recipes', config);
-        debugger;
+            // TO DO: this should have some kind of UI change when save complete
             const response = await fetch('api/recipes', config);
             return response;
     };
