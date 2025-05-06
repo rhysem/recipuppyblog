@@ -13,14 +13,11 @@ namespace RecipeAPI.Controllers
 
         public RecipesController(IRecipeRepository recipeRepository)
         {
-            // TODO - dependency injection!!!
-            // hmmm - LOOKS like this sets up repo/dependencies ok, but AddRecipe.jsx gets a 400 back - never gets to endpoint in CreateRecipe - what's going on?
             _recipeRepository = recipeRepository;
         }
 
         [HttpGet]
         [Route("")]
-        [Route("Recipes")]
         public Task<IEnumerable<Recipe>> GetRecipes()
         {
             return _recipeRepository.GetRecipes();

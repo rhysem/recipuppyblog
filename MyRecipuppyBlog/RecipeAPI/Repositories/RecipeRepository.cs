@@ -24,7 +24,27 @@ namespace RecipeAPI.Repositories
 
         public async Task<IEnumerable<Recipe>> GetRecipes()
         {
-            throw new NotImplementedException();
+            var request = new ScanRequest()
+            {
+                TableName = "Recipes",
+
+            };
+
+            var resp = await _client.ScanAsync(request);
+
+            if (resp.HttpStatusCode != System.Net.HttpStatusCode.OK) // what other httpcodes should we allow?
+            {
+                // log err
+                return new List<Recipe>() { new Recipe() }; // return err message?
+            }
+
+            var recipeList = new List<Recipe>();
+            foreach (var item in resp.Items)
+            {
+                recipeList.Add(MapToRecipe(item));
+            }
+
+            return recipeList;
         }
 
         public async Task<Recipe> GetRecipeAsync(string id)
@@ -36,12 +56,7 @@ namespace RecipeAPI.Repositories
             };
 
             var resp = await _client.GetItemAsync(request);
-            var attributeMap = resp.Item; // map to recipe
-
-            return new Recipe()
-            {
-
-            };
+            return MapToRecipe(resp.Item);
         }
 
         public async Task<string> SaveRecipeAsync(Recipe recipe)
@@ -72,6 +87,18 @@ namespace RecipeAPI.Repositories
         public Task DeleteRecipeAsync(int id)
         {
             throw new NotImplementedException();
+        }
+
+        private Recipe MapToRecipe(Dictionary<string, AttributeValue> item)
+        {
+            // maybe - include ID so these can be clicked into? at least for GetAll
+            return new Recipe()
+            {
+                Name = item["Name"]?.S ?? "",
+                Description = item["Description"]?.S ?? "",
+                Ingredients = item["Ingredients"]?.S ?? "",
+                Directions = item["Directions"]?.S ?? ""
+            };
         }
     }
 }
