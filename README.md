@@ -1,5 +1,5 @@
 # My Recipuppy Blog
-This is my personal site for storing recipes I love! I created this repo both to learn shipping a full stack app on my own, as well as to have my favorite recipes accessible to me while I cook without having to suffer through another recipe blog that's bloated with ads and popups. 
+A basic application for saving personal recipes, without all the popups and ads.
 
 ## Built with
-![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white)
+![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white) ![React](https://img.shields.io/badge/-ReactJs-61DAFB?logo=react&logoColor=white&style=for-the-badge) ![AWS](https://img.shields.io/badge/AWS-232F3E?style=flat&logo=amazonwebservices&logoColor=white)

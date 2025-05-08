@@ -32,7 +32,7 @@ namespace RecipeAPI.Repositories
 
             var resp = await _client.ScanAsync(request);
 
-            if (resp.HttpStatusCode != System.Net.HttpStatusCode.OK) // what other httpcodes should we allow?
+            if (resp.HttpStatusCode != System.Net.HttpStatusCode.OK) // what other httpcodes should be allowed?
             {
                 // log err
                 return new List<Recipe>() { new Recipe() }; // return err message?
@@ -61,8 +61,6 @@ namespace RecipeAPI.Repositories
 
         public async Task<string> SaveRecipeAsync(Recipe recipe)
         {
-            // validate - should this go in like a service?
-
             var recipeId = Guid.NewGuid().ToString();
             var recipeItem = new Dictionary<string, AttributeValue>
             {
@@ -80,7 +78,7 @@ namespace RecipeAPI.Repositories
             };
 
             var resp = await _client.PutItemAsync(request);
-            // TO DO: look at HTTPStatusCode or whatever it's called
+            // TO DO: check HTTPStatusCode
             return recipeId;
         }
 
@@ -91,9 +89,9 @@ namespace RecipeAPI.Repositories
 
         private Recipe MapToRecipe(Dictionary<string, AttributeValue> item)
         {
-            // maybe - include ID so these can be clicked into? at least for GetAll
             return new Recipe()
             {
+                Id = item["RecipeID"]?.S ?? "",
                 Name = item["Name"]?.S ?? "",
                 Description = item["Description"]?.S ?? "",
                 Ingredients = item["Ingredients"]?.S ?? "",

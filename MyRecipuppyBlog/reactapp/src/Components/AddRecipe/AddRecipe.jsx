@@ -12,7 +12,6 @@ export default class AddRecipe extends Component {
         var ingredients = document.getElementById("ingredients").value;
         var directions = document.getElementById("directions").value;
 
-        // ?????????????????????? this throws a fucking fit if there's no ID param even as an empty string. am i missing something? can i allow missing prop or something?
         var recipe = { id: '', name: name, description: description, ingredients, ingredients, directions: directions };
 
             const config = {

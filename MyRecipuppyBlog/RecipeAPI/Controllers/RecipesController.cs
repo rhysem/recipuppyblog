@@ -6,7 +6,7 @@ using RecipeAPI.Repositories;
 namespace RecipeAPI.Controllers
 {
     [ApiController]
-    [Route("api/recipes")] // api/[controller] or api/recipes
+    [Route("api/recipes")]
     public class RecipesController : ControllerBase
     {
         private readonly IRecipeRepository _recipeRepository;
