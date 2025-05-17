@@ -12,5 +12,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="src\Components\GetRecipes\" />
+    <Folder Include="src\Components\Navigation\" />
+    <Folder Include="src\Components\Home\" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptConfiguration Remove="src\Components\NewFolder\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="src\Components\NewFolder\**" />
   </ItemGroup>
 </Project>
