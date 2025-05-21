@@ -17,10 +17,10 @@ namespace RecipeAPI.Controllers
         }
 
         [HttpGet]
-        [Route("")]
-        public Task<IEnumerable<Recipe>> GetRecipes()
+        [Route("{testMode:bool}")]
+        public Task<IEnumerable<Recipe>> GetRecipes(bool testMode = true)
         {
-            return _recipeRepository.GetRecipes();
+            return _recipeRepository.GetRecipes(testMode);
         }
 
         // TODO - handle CSRF - in whole app!!!

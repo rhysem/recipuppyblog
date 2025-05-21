@@ -11,6 +11,8 @@ namespace RecipeAPI.Repositories
         private readonly IConfiguration _config;
         const string TableName = "Recipes";
 
+        private List<Recipe> _fakeRecipes;
+
         public RecipeRepository(IConfiguration config)
         {
             _config = config;
@@ -22,27 +24,37 @@ namespace RecipeAPI.Repositories
         }
 
 
-        public async Task<IEnumerable<Recipe>> GetRecipes()
+        public async Task<IEnumerable<Recipe>> GetRecipes(bool testMode)
         {
-            var request = new ScanRequest()
-            {
-                TableName = "Recipes",
-
-            };
-
-            var resp = await _client.ScanAsync(request);
-
-            if (resp.HttpStatusCode != System.Net.HttpStatusCode.OK) // what other httpcodes should be allowed?
-            {
-                // log err
-                return new List<Recipe>() { new Recipe() }; // return err message?
-            }
-
             var recipeList = new List<Recipe>();
-            foreach (var item in resp.Items)
+
+            if (testMode)
             {
-                recipeList.Add(MapToRecipe(item));
+                SetFakeRecipes();
+                recipeList = _fakeRecipes;
             }
+
+            else
+            {
+                var request = new ScanRequest()
+                {
+                    TableName = "Recipes",
+                };
+
+                var resp = await _client.ScanAsync(request);
+
+                if (resp.HttpStatusCode != System.Net.HttpStatusCode.OK) // what other httpcodes should be allowed?
+                {
+                    // log err
+                    return new List<Recipe>() { new Recipe() }; // return err message?
+                }
+
+                foreach (var item in resp.Items)
+                {
+                    recipeList.Add(MapToRecipe(item));
+                }
+            }
+
 
             return recipeList;
         }
@@ -97,6 +109,19 @@ namespace RecipeAPI.Repositories
                 Ingredients = item["Ingredients"]?.S ?? "",
                 Directions = item["Directions"]?.S ?? ""
             };
+        }
+
+        private void SetFakeRecipes()
+        {
+            if (_fakeRecipes == null || _fakeRecipes.Count == 0)
+            {
+                _fakeRecipes = new List<Recipe>
+                {
+                    new Recipe { Id = "1", Name = "Apple", Description = "Just an apple", Ingredients = "Apple", Directions = "eat apple" },
+                    new Recipe { Id = "2", Name = "Toast", Ingredients = "bread\npeanut butter", Directions = "toast bread\ntop with peanut butter\nenjoy!" },
+                    new Recipe { Id = "3", Name = "Yogurt Bowl", Description = "my favorite breakfasttime treat", Ingredients = "vanilla yogurt\ngranola\n1 banana\npb fit", Directions = "Combine vanilla yogurt and some pb fit in a bowl. Top with banana slices and granola. Drizzle with pb fit mixed with water. Eat!" }
+                };
+            }
         }
     }
 }

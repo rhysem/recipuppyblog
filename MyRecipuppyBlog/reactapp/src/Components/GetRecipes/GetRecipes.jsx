@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './GetRecipes.css';
+import '../RecipeCard/RecipeCard.jsx';
+import RecipeCard from '../RecipeCard/RecipeCard.jsx';
 
 function GetRecipes() {
 
@@ -8,26 +10,20 @@ function GetRecipes() {
     const buttonText = `Test mode: ${testMode ? "ON" : "OFF"}`;
 
     const getAllRecipes = async function () {
-        if (testMode) {
-            var fakeRecipes = [
-                { name: "apple", description: "just an apple", ingredients: "apple", directions: "eat apple" },
-                { name: "toast", description: "a breakfast fave", ingredients: "bread\npeanut butter", directions: "toast bread\ntop with peanut butter\nenjoy!" },
-                { name: "yogurt bowl", description: "my favorite breakfasttime treat", ingredients: "vanilla yogurt\ngranola\n1 banana\npb fit", directions: "Combine vanilla yogurt and some pb fit in a bowl. Top with banana slices and granola. Drizzle with pb fit mixed with water. Eat!"},
-            ];
+        const url = `api/recipes/${testMode}`;
+        const resp = await fetch(url);
+        const body = await resp.json();
 
-            setRecipes(fakeRecipes);
-        }
-        else {
-            const url = "api/recipes";
-            const resp = await fetch(url);
-            const body = await resp.json();
-
-            setRecipes(body);
-        }
+        setRecipes(body);
     };
+
+    //const goToRecipe = function () {
+
+    //}
 
     const toggleTestMode = function () {
         setTestMode(!testMode);
+        getAllRecipes();
     }
 
 
@@ -38,12 +34,8 @@ function GetRecipes() {
     var recipesContent = [];
     recipes.forEach(recipe => {
         recipesContent.push(
-            <div className="recipe">
-                <div className="name">Name: {recipe.name}</div>
-                <div className="description">Description: {recipe.description}</div>
-                <div className="ingredients">Ingredients: {recipe.ingredients}</div>
-                <div className="directions">Directions: {recipe.directions}</div>
-            </div>
+            //<a onClick={() => goToRecipe(recipe.id)}>{recipe.name}</a>
+            <RecipeCard name={recipe.name} ingredients={recipe.ingredients} description={recipe.description} directions={recipe.directions} />
         );
     });
 

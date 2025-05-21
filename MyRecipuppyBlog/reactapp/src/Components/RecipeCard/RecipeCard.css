@@ -1,0 +1,11 @@
+.recipe-card {
+    border: dashed 3px black;
+    border-radius: 10px;
+    padding: 8px;
+    text-align: center;
+}
+
+.ingredients-list {
+    list-style-type: none;
+    padding-left: 0px;
+}
